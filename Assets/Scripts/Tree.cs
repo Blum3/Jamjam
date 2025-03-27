@@ -6,9 +6,15 @@ using UnityEngine;
 
 public class Tree : MonoBehaviour
 {
+    public enum treeTypes
+    {
+        oak,
+        pine
+    }
+
     public int age = 0;
     public int treeState = 0;
-    public string treeType;
+    public treeTypes treeType;
     public GameObject model1;
     public GameObject model2;
     public GameObject model3;
@@ -19,6 +25,8 @@ public class Tree : MonoBehaviour
     public int minOptimalAlt;
     public string optimalBiom;
 
+    
+
 
 
     
@@ -28,9 +36,9 @@ public class Tree : MonoBehaviour
         growCoef = 1;
         altitude = transform.position.y;
         Debug.Log("altitude : " + altitude);
-        if (treeType != null && treeBiom != null)
+        if (treeBiom != null)
         {
-            if (treeType == "oak")
+            if (treeType == treeTypes.oak)
             {
                 if (altitude < minOptimalAlt && altitude > maxOptimalAlt)
                 {
@@ -65,12 +73,12 @@ public class Tree : MonoBehaviour
                 model3.SetActive(true);
                 // update the model of the tree
             }
-            Debug.Log(treeState);
+            // Debug.Log(treeState);
 
         }
         else
         {
-            Debug.Log("not growing");
+            // Debug.Log("not growing");
         }
     }
 }
