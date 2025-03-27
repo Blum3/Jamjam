@@ -43,13 +43,24 @@ namespace StarterAssets
 		[Tooltip("What layers the character uses as ground")]
 		public LayerMask GroundLayers;
 
-		[Header("Cinemachine")]
+        [Header("Raycasting")]
+        [Tooltip("Camera used to cast a ray")]
+        public Camera PlayerCamera;
+        [Tooltip("What layers the character is planting in")]
+        public LayerMask SeedLayers;
+        [Tooltip("What tree the character is planting")]
+        public GameObject TreeToPlant;
+		[Tooltip("The Crosshair to activate when the player can plant")]
+		public GameObject CanPlantCrosshair;
+
+        [Header("Cinemachine")]
 		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
 		public GameObject CinemachineCameraTarget;
 		[Tooltip("How far in degrees can you move the camera up")]
 		public float TopClamp = 90.0f;
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
+
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
@@ -72,7 +83,7 @@ namespace StarterAssets
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 
-		private const float _threshold = 0.01f;
+		private const float _threshold = 0.00f;
 
 		private bool IsCurrentDeviceMouse
 		{
@@ -122,6 +133,18 @@ namespace StarterAssets
 			CameraRotation();
 		}
 
+		public void OnShoot()
+		{
+
+			Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
+			if (Physics.Raycast(ray, out RaycastHit hit, 10, SeedLayers))
+			{
+				Debug.Log("hit " + hit.collider.gameObject.name + " at distance " + hit.distance + " at position " + hit.point);
+				GameObject.Instantiate(TreeToPlant, hit.point, TreeToPlant.transform.rotation);
+
+            }
+		}
+
 		private void GroundedCheck()
 		{
 			// set sphere position, with offset
@@ -148,7 +171,18 @@ namespace StarterAssets
 
 				// rotate the player left and right
 				transform.Rotate(Vector3.up * _rotationVelocity);
-			}
+
+                Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
+				if (Physics.Raycast(ray, out RaycastHit hit, 10, SeedLayers))
+				{
+					CanPlantCrosshair.SetActive(true);
+				}
+				else
+				{
+                    CanPlantCrosshair.SetActive(false);
+                }
+
+            }
 		}
 
 		private void Move()
