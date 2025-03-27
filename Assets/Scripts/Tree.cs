@@ -32,10 +32,8 @@ public class Tree : MonoBehaviour
     
     public void Start()
     {
-        Debug.Log("treeType :" + treeType);
         growCoef = 1;
         altitude = transform.position.y;
-        Debug.Log("altitude : " + altitude);
         if (treeBiom != null)
         {
             if (treeType == treeTypes.oak)
@@ -57,7 +55,6 @@ public class Tree : MonoBehaviour
     private void grow()
     {
         age += 10;
-        Debug.Log(age);
         if (UnityEngine.Random.Range(0, 100) * growCoef + (age / 10) > 20)
         {
             treeState += 1;

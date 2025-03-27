@@ -47,11 +47,24 @@ namespace StarterAssets
         [Tooltip("Camera used to cast a ray")]
         public Camera PlayerCamera;
         [Tooltip("What layers the character is planting in")]
-        public LayerMask SeedLayers;
-        [Tooltip("What tree the character is planting")]
-        public GameObject TreeToPlant;
+        public LayerMask PlantingLayers;
 		[Tooltip("The Crosshair to activate when the player can plant")]
-		public GameObject CanPlantCrosshair;
+		public GameObject PlantCrosshair;
+        [Tooltip("The Crosshair to activate when the player can grab")]
+        public GameObject GrabCrosshair;
+        [Tooltip("The reach player has to plant a seed")]
+        public int PlantingReach = 8;
+        [Tooltip("The reach player has to grab something")]
+        public int GrabbingReach = 8;
+        [Tooltip("What layers the character can grab")]
+        public LayerMask GrabbingLayers;
+
+        [Header("Inventory")]
+        [Tooltip("script handling inventory logic")]
+        public Inventory inventory;
+		public GameObject OakObject;
+        public GameObject PineObject;
+
 
         [Header("Cinemachine")]
 		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
@@ -133,19 +146,54 @@ namespace StarterAssets
 			CameraRotation();
 		}
 
-		public void OnShoot()
+
+
+		public void OnGrab()
 		{
-
 			Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
-			if (Physics.Raycast(ray, out RaycastHit hit, 10, SeedLayers))
+
+			if (Physics.Raycast(ray, out RaycastHit grabbable_hit, GrabbingReach, GrabbingLayers) && inventory.canGrabSeed())
 			{
-				Debug.Log("hit " + hit.collider.gameObject.name + " at distance " + hit.distance + " at position " + hit.point);
-				GameObject.Instantiate(TreeToPlant, hit.point, TreeToPlant.transform.rotation);
+				// should be a class Grabbable => Seed should implement grabbable
+				Seed seed = grabbable_hit.collider.gameObject.GetComponent<Seed>();
+				inventory.AddSeed(seed);
+				Destroy(grabbable_hit.collider.gameObject);
+			}
+        }
 
+        public void OnScroll(InputValue value)
+        {
+			float scrollValue = value.Get<float>();
+			if (scrollValue > 0)
+			{
+				inventory.selectUp();
+			}
+            else if (scrollValue < 0)
+            {
+				inventory.selectDown();
+			}
+        }
+
+        public void OnShoot()
+        {
+			Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
+
+            if (Physics.Raycast(ray, out RaycastHit hit, PlantingReach, PlantingLayers) && inventory.canPlantSeed())
+            {
+                Tree.treeTypes treeType = inventory.GetSelectedSeed().seedType;
+                if (treeType == Tree.treeTypes.oak)
+                {
+                    GameObject.Instantiate(OakObject, hit.point, OakObject.transform.rotation);
+                }
+                if (treeType == Tree.treeTypes.pine)
+                {
+                    GameObject.Instantiate(PineObject, hit.point, OakObject.transform.rotation);
+                }
+                inventory.RemoveSelectedSeed();
             }
-		}
+        }
 
-		private void GroundedCheck()
+        private void GroundedCheck()
 		{
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
@@ -173,14 +221,22 @@ namespace StarterAssets
 				transform.Rotate(Vector3.up * _rotationVelocity);
 
                 Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
-				if (Physics.Raycast(ray, out RaycastHit hit, 10, SeedLayers))
+
+				if (Physics.Raycast(ray, out RaycastHit grabbable_hit, GrabbingReach, GrabbingLayers))
 				{
-					CanPlantCrosshair.SetActive(true);
-				}
-				else
-				{
-                    CanPlantCrosshair.SetActive(false);
+                    GrabCrosshair.SetActive(true);
+                    PlantCrosshair.SetActive(false);
                 }
+                else if (Physics.Raycast(ray, out RaycastHit _, PlantingReach, PlantingLayers))
+                {
+                    PlantCrosshair.SetActive(true);
+                    GrabCrosshair.SetActive(false);
+                }
+                else
+				{
+					PlantCrosshair.SetActive(false);
+					GrabCrosshair.SetActive(false);
+				}
 
             }
 		}

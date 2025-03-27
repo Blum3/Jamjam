@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public class Seed
+using System;
+using UnityEngine;
+
+public class Seed : MonoBehaviour
 {
     public Tree.treeTypes seedType;
 
@@ -8,4 +11,5 @@ public class Seed
     {
         seedType = tree;
     }
+
 }
