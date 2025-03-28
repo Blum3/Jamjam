@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -58,11 +59,12 @@ namespace StarterAssets
         [Header("Inventory")]
         [Tooltip("script handling inventory logic")]
         public Inventory inventory;
-		public GameObject AshPrefab;
+		    public GameObject AshPrefab;
         public GameObject BirchPrefab;
         public GameObject SprucePrefab;
         public GameObject WippingWillowPrefab;
         public UIManager UIManager;
+		    public ParticleSystem plantEffect;
 
 
         [Header("Cinemachine")]
@@ -198,7 +200,14 @@ namespace StarterAssets
                 {
                     GameObject.Instantiate(WippingWillowPrefab, hit.point, randomRotation);
                 }
-                inventory.RemoveSelectedSeed();
+                if (plantEffect != null)
+                {
+					GameObject.Instantiate(plantEffect, hit.point, plantEffect.transform.rotation);
+					plantEffect.Play();
+                }
+
+				inventory.RemoveSelectedSeed();
+
             }
         }
 
