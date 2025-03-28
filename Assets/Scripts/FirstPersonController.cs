@@ -152,7 +152,7 @@ namespace StarterAssets
 		{
 			Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
 
-			if (Physics.Raycast(ray, out RaycastHit grabbable_hit, GrabbingReach, GrabbingLayers) && inventory.canGrabSeed())
+			if (Physics.Raycast(ray, out RaycastHit grabbable_hit, GrabbingReach, GrabbingLayers))
 			{
 				// should be a class Grabbable => Seed should implement grabbable
 				Seed seed = grabbable_hit.collider.gameObject.GetComponent<Seed>();
@@ -180,7 +180,7 @@ namespace StarterAssets
 
             if (Physics.Raycast(ray, out RaycastHit hit, PlantingReach, PlantingLayers) && inventory.canPlantSeed())
             {
-                Tree.treeTypes treeType = inventory.GetSelectedSeed().seedType;
+                Tree.treeTypes treeType = inventory.GetSelectedSeed();
                 if (treeType == Tree.treeTypes.oak)
                 {
                     GameObject.Instantiate(OakObject, hit.point, OakObject.transform.rotation);

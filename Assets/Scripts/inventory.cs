@@ -4,10 +4,13 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
+using System.Linq;
+using static Tree;
 
 public class Inventory : MonoBehaviour
 {
-    public List<Seed> seeds = new List<Seed>();
+    public Dictionary<Tree.treeTypes, int> seeds = new Dictionary<Tree.treeTypes, int>();
     public GameObject seedIconPrefab; // Reference to the seed icon prefab
     public Transform inventoryPanel; // Panel where seed icons will be displayed
 
@@ -20,11 +23,8 @@ public class Inventory : MonoBehaviour
 
     void Start()
     {
-        seeds.Add(new Seed(Tree.treeTypes.oak));
-        seeds.Add(new Seed(Tree.treeTypes.pine));
-        seeds.Add(new Seed(Tree.treeTypes.pine));
+        seeds[Tree.treeTypes.oak] = 5;
 
-        // Initialize UI to display seeds
         UpdateSeedUI();
     }
 
@@ -45,7 +45,7 @@ public class Inventory : MonoBehaviour
 
             // change the text (should be in ui manager)
             TextMeshProUGUI seedText = seedIcon.GetComponentInChildren<TextMeshProUGUI>();
-            seedText.text = seed.seedType.ToString();
+            seedText.text = seed.Key.ToString() + seed.Value.ToString();
 
             // Get the Image component or Background component of the seed icon
             Image seedIconImage = seedIcon.GetComponent<Image>();
@@ -53,8 +53,9 @@ public class Inventory : MonoBehaviour
             // Set the default background color for all seeds
             seedIconImage.color = defaultColor;
 
-            // Add a method to highlight the selected seed
-            if (seeds.IndexOf(seed) == selectedSeedIndex)
+            // Add a method to highlight the selected see
+            List<Tree.treeTypes> keysList = seeds.Keys.ToList();
+            if (keysList.IndexOf(seed.Key) == selectedSeedIndex)
             {
                 // Highlight the selected seed
                 seedIconImage.color = selectedColor;
@@ -72,7 +73,7 @@ public class Inventory : MonoBehaviour
             selectedSeedIndex = (selectedSeedIndex + 1 + seeds.Count) % seeds.Count;
             UpdateSeedUI();
         }
-        Debug.Log("Graine sélectionnée : " + seeds[selectedSeedIndex].seedType);
+        Debug.Log("Graine sélectionnée : " + this.GetSelectedSeed());
     }
 
     public void selectDown()
@@ -82,54 +83,65 @@ public class Inventory : MonoBehaviour
             selectedSeedIndex = (selectedSeedIndex - 1 + seeds.Count) % seeds.Count;
             UpdateSeedUI();
         }
-        Debug.Log("Graine sélectionnée : " + seeds[selectedSeedIndex].seedType);
+        Debug.Log("Graine sélectionnée : " + this.GetSelectedSeed());
     }
 
     // Obtenir la graine actuellement sélectionnée
-    public Seed GetSelectedSeed()
+    public treeTypes GetSelectedSeed()
+    {
+        return seeds.ElementAt(selectedSeedIndex).Key;
+    }
+
+    public int GetSelectedNumber()
     {
         if (seeds.Count > 0)
         {
-            return seeds[selectedSeedIndex];
+            return seeds.ElementAt(selectedSeedIndex).Value;
         }
-        return null;
+        return 0;
     }
+
+
 
     // Supprimer une graine après plantation
     public void RemoveSelectedSeed()
     {
         if (seeds.Count > 0)
         {
-            seeds.RemoveAt(selectedSeedIndex);
-            selectedSeedIndex = Mathf.Clamp(selectedSeedIndex, 0, seeds.Count - 1);
-            UpdateSeedUI();
+            treeTypes selectedSeed = this.GetSelectedSeed();
+
+            if (this.GetSelectedNumber() > 0)
+            {
+                seeds[selectedSeed] -= 1;
+            }
+            
+           selectedSeedIndex = Mathf.Clamp(selectedSeedIndex, 0, seeds.Count - 1);
+           UpdateSeedUI();
         }
     }
 
-    // Ajouter une seed à l'inventaire
+        // Ajouter une seed à l'inventaire
     public void AddSeed(Seed seed)
     {
-        selectedSeedIndex = 0;
-        seeds.Add(seed);
-        UpdateSeedUI();
-    }
+        treeTypes newSeed = seed.seedType;
+        if (seeds.ContainsKey(newSeed))
+        {
+            selectedSeedIndex = 0;
 
-    public bool canGrabSeed()
-    {
-        if (seeds.Count < 10)
-        {
-            return true;
+            seeds[newSeed] += 1;
+            UpdateSeedUI();
         }
-        else
+        else 
         {
-            ui_manager.showTip("You can\'t carry more seeds !");
-            return false;
+            Debug.Log("NEW SEED !!!");
+            seeds.Add(newSeed, 1);
+            UpdateSeedUI();
         }
     }
 
     public bool canPlantSeed()
     {
-        if (seeds.Count > 0)
+        if (seeds.Count > 0 && this.GetSelectedNumber() > 0)
         {
             return true;
         }
