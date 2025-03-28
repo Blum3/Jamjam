@@ -8,10 +8,10 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI tipText;
 
     [SerializeField]
-    private TextMeshProUGUI errorText;
+    private TextMeshProUGUI messageText;
 
     [SerializeField]
-    private float errorDuration = 3f; // Duration in seconds
+    private float messageDuration = 3f; // Duration in seconds
 
     [Tooltip("The Crosshair to activate when the player can plant")]
     public GameObject PlantCrosshair;
@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviour
     public GameObject SeedsPanel;
     public bool gameIsPaused = false;
 
-    private Coroutine errorCoroutine; // Store coroutine to stop if needed
+    private Coroutine messageCoroutine; // Store coroutine to stop if needed
 
     public void ShowTip(string text)
     {
@@ -37,14 +37,14 @@ public class UIManager : MonoBehaviour
 
     public void showGrabElements()
     {
-        ShowTip("[E]");
+        //ShowTip("[E]");
         GrabCrosshair.SetActive(true);
         PlantCrosshair.SetActive(false);
     }
 
     public void showPlantElements()
     {
-        ShowTip("[Left Mouse Button]");
+        //ShowTip("[Left Mouse Button]");
         GrabCrosshair.SetActive(false);
         PlantCrosshair.SetActive(true);
     }
@@ -55,27 +55,27 @@ public class UIManager : MonoBehaviour
         PlantCrosshair.SetActive(false);
     }
 
-    public void ShowError(string text)
+    public void ShowMessage(string text)
     {
         Debug.Log(text);
 
         // If a tip is already showing, restart the coroutine
-        if (errorCoroutine != null)
+        if (messageCoroutine != null)
         {
-            StopCoroutine(errorCoroutine);
+            StopCoroutine(messageCoroutine);
         }
 
-        errorCoroutine = StartCoroutine(ShowErrorCoroutine(text));
+        messageCoroutine = StartCoroutine(ShowMessageCoroutine(text));
     }
 
-    private IEnumerator ShowErrorCoroutine(string text)
+    private IEnumerator ShowMessageCoroutine(string text)
     {
-        errorText.text = text;
-        errorText.enabled = true;
+        messageText.text = text;
+        messageText.enabled = true;
 
-        yield return new WaitForSeconds(errorDuration);
+        yield return new WaitForSeconds(messageDuration);
 
-        errorText.enabled = false;
+        messageText.enabled = false;
     }
 
     public void showOrHideSettings()

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Unity.VisualScripting;
 using System.Linq;
 using static Tree;
+using System.Text.RegularExpressions;
 
 public class Inventory : MonoBehaviour
 {
@@ -23,10 +24,10 @@ public class Inventory : MonoBehaviour
 
     void Start()
     {
-        seeds[Tree.treeTypes.Ash] = 5;
-        seeds[Tree.treeTypes.Birch] = 5;
-        seeds[Tree.treeTypes.Spruce] = 5;
-        seeds[Tree.treeTypes.WippingWillow] = 5;
+        //seeds[Tree.treeTypes.Ash] = 5;
+        //seeds[Tree.treeTypes.Birch] = 5;
+        //seeds[Tree.treeTypes.Spruce] = 5;
+        //seeds[Tree.treeTypes.WippingWillow] = 5;
 
         UpdateSeedUI();
     }
@@ -46,9 +47,8 @@ public class Inventory : MonoBehaviour
             // Instantiate the UI prefab for each seed
             GameObject seedIcon = Instantiate(seedIconPrefab, inventoryPanel);
 
-            // change the text (should be in ui manager)
-            TextMeshProUGUI seedText = seedIcon.GetComponentInChildren<TextMeshProUGUI>();
-            seedText.text = seed.Key.ToString() + seed.Value.ToString();
+            //update the text of the icon
+            seedIcon.GetComponent<SeedIconManager>().updateIcon(Regex.Replace(seed.Key.ToString(), "(\\B[A-Z])", " $1"), seed.Value.ToString());
 
             // Get the Image component or Background component of the seed icon
             Image seedIconImage = seedIcon.GetComponent<Image>();
@@ -70,7 +70,6 @@ public class Inventory : MonoBehaviour
 
     public void selectUp()
     {
-        selectedSeedIndex = (selectedSeedIndex + 1) % seeds.Count;
         if (seeds.Count >1)
         {
             selectedSeedIndex = (selectedSeedIndex + 1 + seeds.Count) % seeds.Count;
@@ -136,8 +135,7 @@ public class Inventory : MonoBehaviour
         }
         else 
         {
-            ui_manager.ShowError("You can\'t carry more seeds !");            
-            Debug.Log("NEW SEED !!!");
+            ui_manager.ShowMessage("New Seed : " + Regex.Replace(seed.seedType.ToString(), "(\\B[A-Z])", " $1"));
             seeds.Add(newSeed, 1);
             UpdateSeedUI();
         }
@@ -151,7 +149,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            ui_manager.ShowError("You don\'t have any more seeds to plant !");
+            ui_manager.ShowMessage("You don\'t have any more seeds to plant !");
             return false;
         }
     }

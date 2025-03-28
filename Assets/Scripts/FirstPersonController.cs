@@ -179,7 +179,7 @@ namespace StarterAssets
         {
 			Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, PlantingReach, PlantingLayers) && inventory.canPlantSeed())
+            if (Physics.Raycast(ray, out RaycastHit hit, PlantingReach, PlantingLayers) && inventory.canPlantSeed() && !UIManager.gameIsPaused)
             {
                 Tree.treeTypes treeType = inventory.GetSelectedSeed();
                 // Generate a random rotation around the Y-axis
