@@ -137,7 +137,6 @@ public class Inventory : MonoBehaviour
             Debug.Log("NEW SEED !!!");
             seeds.Add(newSeed, 1);
             UpdateSeedUI();
-            return false;
         }
     }
 
