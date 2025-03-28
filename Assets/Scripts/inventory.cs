@@ -23,7 +23,10 @@ public class Inventory : MonoBehaviour
 
     void Start()
     {
-        seeds[Tree.treeTypes.oak] = 5;
+        seeds[Tree.treeTypes.Ash] = 5;
+        seeds[Tree.treeTypes.Birch] = 5;
+        seeds[Tree.treeTypes.Spruce] = 5;
+        seeds[Tree.treeTypes.WippingWillow] = 5;
 
         UpdateSeedUI();
     }
@@ -137,7 +140,6 @@ public class Inventory : MonoBehaviour
             Debug.Log("NEW SEED !!!");
             seeds.Add(newSeed, 1);
             UpdateSeedUI();
-            return false;
         }
     }
 

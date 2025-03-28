@@ -58,9 +58,11 @@ namespace StarterAssets
         [Header("Inventory")]
         [Tooltip("script handling inventory logic")]
         public Inventory inventory;
-		public GameObject OakObject;
-        public GameObject PineObject;
-		public UIManager UIManager;
+		public GameObject AshPrefab;
+        public GameObject BirchPrefab;
+        public GameObject SprucePrefab;
+        public GameObject WippingWillowPrefab;
+        public UIManager UIManager;
 
 
         [Header("Cinemachine")]
@@ -178,13 +180,23 @@ namespace StarterAssets
             if (Physics.Raycast(ray, out RaycastHit hit, PlantingReach, PlantingLayers) && inventory.canPlantSeed())
             {
                 Tree.treeTypes treeType = inventory.GetSelectedSeed();
-                if (treeType == Tree.treeTypes.oak)
+                // Generate a random rotation around the Y-axis
+                Quaternion randomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+                if (treeType == Tree.treeTypes.Ash)
                 {
-                    GameObject.Instantiate(OakObject, hit.point, OakObject.transform.rotation);
+                    GameObject.Instantiate(AshPrefab, hit.point, randomRotation);
                 }
-                if (treeType == Tree.treeTypes.pine)
+                if (treeType == Tree.treeTypes.Birch)
                 {
-                    GameObject.Instantiate(PineObject, hit.point, OakObject.transform.rotation);
+                    GameObject.Instantiate(BirchPrefab, hit.point, randomRotation);
+                }
+                if (treeType == Tree.treeTypes.Spruce)
+                {
+                    GameObject.Instantiate(SprucePrefab, hit.point, randomRotation);
+                }
+                if (treeType == Tree.treeTypes.WippingWillow)
+                {
+                    GameObject.Instantiate(WippingWillowPrefab, hit.point, randomRotation);
                 }
                 inventory.RemoveSelectedSeed();
             }

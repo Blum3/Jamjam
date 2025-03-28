@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     public GameObject GrabCrosshair;
 
     public GameObject SettingsPanel;
+    public GameObject SeedsPanel;
     public bool gameIsPaused = false;
 
     private Coroutine errorCoroutine; // Store coroutine to stop if needed
@@ -81,12 +82,14 @@ public class UIManager : MonoBehaviour
     {
         if (gameIsPaused)
         {
+            SeedsPanel.SetActive(true);
             SettingsPanel.SetActive(false);
             gameIsPaused = false;
             Time.timeScale = 1f;
         }
         else
         {
+            SeedsPanel.SetActive(false);
             SettingsPanel.SetActive(true);
             gameIsPaused = true;
             Time.timeScale = 0f;
