@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 
 
@@ -8,37 +9,44 @@ public class Tree : MonoBehaviour
 {
     public enum treeTypes
     {
-        oak,
-        pine
+        Ash,
+        Birch,
+        Spruce,
+        WippingWillow
     }
 
     public int age = 0;
     public int treeState = 0;
     public treeTypes treeType;
-    public GameObject model1;
-    public GameObject model2;
-    public GameObject model3;
+    public GameObject soilModel;
+    public GameObject treeModel;
+
     public string treeBiom;
-    public int growCoef;
+    public int growCoef = 1;
     public float altitude;
     public int maxOptimalAlt;
     public int minOptimalAlt;
     public string optimalBiom;
 
-    
+    [SerializeField]
+    private int growInterval=10;
 
+    [SerializeField]
+    private float growSize1 = 1.2f;
+    [SerializeField]
+    private float growSize2 = 1.8f;
 
+    private float randomSizeFactor;
 
-    
     public void Start()
     {
-        growCoef = 1;
+        randomSizeFactor = UnityEngine.Random.Range(0.8f, 1.2f);
         altitude = transform.position.y;
         if (treeBiom != null)
         {
-            if (treeType == treeTypes.oak)
+            if (treeType == treeTypes.Ash)
             {
-                if (altitude < minOptimalAlt && altitude > maxOptimalAlt)
+                if (altitude < minOptimalAlt || altitude > maxOptimalAlt)
                 {
                     growCoef /= 2;
                 }
@@ -49,25 +57,29 @@ public class Tree : MonoBehaviour
             }
         }
 
-        InvokeRepeating("grow", 10, 10);
+        InvokeRepeating("grow", growInterval, growInterval);
     }
 
     private void grow()
     {
-        age += 10;
-        if (UnityEngine.Random.Range(0, 100) * growCoef + (age / 10) > 20)
+        age += growInterval;
+        if (UnityEngine.Random.Range(0, 100) * growCoef + (age / growInterval) > 20)
         {
             treeState += 1;
             if (treeState == 1)
             {
-                model1.SetActive(false);
-                model2.SetActive(true);
+                soilModel.SetActive(false);
+                treeModel.SetActive(true);
                 // update the model of the tree
             }
             if (treeState == 2)
             {
-                model2.SetActive(false);
-                model3.SetActive(true);
+                treeModel.transform.localScale = new Vector3(growSize1*randomSizeFactor, growSize1* randomSizeFactor, growSize1 * randomSizeFactor );
+                // update the model of the tree
+            }
+            if (treeState == 3)
+            {
+                treeModel.transform.localScale = new Vector3(growSize2* randomSizeFactor, growSize2 * randomSizeFactor, growSize2 * randomSizeFactor);
                 // update the model of the tree
             }
             // Debug.Log(treeState);
@@ -75,7 +87,7 @@ public class Tree : MonoBehaviour
         }
         else
         {
-            // Debug.Log("not growing");
+            Debug.Log(treeType.ToString() + " is not growing.");
         }
     }
 }
