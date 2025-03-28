@@ -48,10 +48,6 @@ namespace StarterAssets
         public Camera PlayerCamera;
         [Tooltip("What layers the character is planting in")]
         public LayerMask PlantingLayers;
-		[Tooltip("The Crosshair to activate when the player can plant")]
-		public GameObject PlantCrosshair;
-        [Tooltip("The Crosshair to activate when the player can grab")]
-        public GameObject GrabCrosshair;
         [Tooltip("The reach player has to plant a seed")]
         public int PlantingReach = 8;
         [Tooltip("The reach player has to grab something")]
@@ -64,6 +60,7 @@ namespace StarterAssets
         public Inventory inventory;
 		public GameObject OakObject;
         public GameObject PineObject;
+		public UIManager UIManager;
 
 
         [Header("Cinemachine")]
@@ -193,6 +190,11 @@ namespace StarterAssets
             }
         }
 
+		public void OnSettings()
+		{
+			UIManager.showOrHideSettings();
+		}
+
         private void GroundedCheck()
 		{
 			// set sphere position, with offset
@@ -203,7 +205,7 @@ namespace StarterAssets
 		private void CameraRotation()
 		{
 			// if there is an input
-			if (_input.look.sqrMagnitude >= _threshold)
+			if (_input.look.sqrMagnitude >= _threshold && !UIManager.gameIsPaused)
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
@@ -224,19 +226,16 @@ namespace StarterAssets
 
 				if (Physics.Raycast(ray, out RaycastHit grabbable_hit, GrabbingReach, GrabbingLayers))
 				{
-                    GrabCrosshair.SetActive(true);
-                    PlantCrosshair.SetActive(false);
+					UIManager.showGrabElements();
                 }
                 else if (Physics.Raycast(ray, out RaycastHit _, PlantingReach, PlantingLayers))
                 {
-                    PlantCrosshair.SetActive(true);
-                    GrabCrosshair.SetActive(false);
+                    UIManager.showPlantElements();
                 }
                 else
 				{
-					PlantCrosshair.SetActive(false);
-					GrabCrosshair.SetActive(false);
-				}
+                    UIManager.hideAllElements();
+                }
 
             }
 		}

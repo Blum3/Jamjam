@@ -73,7 +73,7 @@ public class Inventory : MonoBehaviour
             selectedSeedIndex = (selectedSeedIndex + 1 + seeds.Count) % seeds.Count;
             UpdateSeedUI();
         }
-        Debug.Log("Graine sélectionnée : " + this.GetSelectedSeed());
+        Debug.Log("Graine sÃ©lectionnÃ©e : " + this.GetSelectedSeed());
     }
 
     public void selectDown()
@@ -83,10 +83,10 @@ public class Inventory : MonoBehaviour
             selectedSeedIndex = (selectedSeedIndex - 1 + seeds.Count) % seeds.Count;
             UpdateSeedUI();
         }
-        Debug.Log("Graine sélectionnée : " + this.GetSelectedSeed());
+        Debug.Log("Graine sÃ©lectionnÃ©e : " + this.GetSelectedSeed());
     }
 
-    // Obtenir la graine actuellement sélectionnée
+    // Obtenir la graine actuellement sÃ©lectionnÃ©e
     public treeTypes GetSelectedSeed()
     {
         return seeds.ElementAt(selectedSeedIndex).Key;
@@ -103,7 +103,7 @@ public class Inventory : MonoBehaviour
 
 
 
-    // Supprimer une graine après plantation
+    // Supprimer une graine aprÃ¨s plantation
     public void RemoveSelectedSeed()
     {
         if (seeds.Count > 0)
@@ -120,7 +120,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-        // Ajouter une seed à l'inventaire
+        // Ajouter une seed Ã  l'inventaire
     public void AddSeed(Seed seed)
     {
         treeTypes newSeed = seed.seedType;
@@ -133,9 +133,11 @@ public class Inventory : MonoBehaviour
         }
         else 
         {
+            ui_manager.ShowError("You can\'t carry more seeds !");            
             Debug.Log("NEW SEED !!!");
             seeds.Add(newSeed, 1);
             UpdateSeedUI();
+            return false;
         }
     }
 
@@ -147,7 +149,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            ui_manager.showTip("You don\'t have any more seeds to plant !");
+            ui_manager.ShowError("You don\'t have any more seeds to plant !");
             return false;
         }
     }
