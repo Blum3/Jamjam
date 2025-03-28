@@ -122,7 +122,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            ui_manager.showTip("You can\'t carry more seeds !");
+            ui_manager.ShowError("You can\'t carry more seeds !");
             return false;
         }
     }
@@ -135,7 +135,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            ui_manager.showTip("You don\'t have any more seeds to plant !");
+            ui_manager.ShowError("You don\'t have any more seeds to plant !");
             return false;
         }
     }
