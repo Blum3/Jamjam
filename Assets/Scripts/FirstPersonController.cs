@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -61,6 +62,7 @@ namespace StarterAssets
 		public GameObject OakObject;
         public GameObject PineObject;
 		public UIManager UIManager;
+		public ParticleSystem plantEffect;
 
 
         [Header("Cinemachine")]
@@ -177,7 +179,8 @@ namespace StarterAssets
 
             if (Physics.Raycast(ray, out RaycastHit hit, PlantingReach, PlantingLayers) && inventory.canPlantSeed())
             {
-                Tree.treeTypes treeType = inventory.GetSelectedSeed();
+
+				Tree.treeTypes treeType = inventory.GetSelectedSeed();
                 if (treeType == Tree.treeTypes.oak)
                 {
                     GameObject.Instantiate(OakObject, hit.point, OakObject.transform.rotation);
@@ -186,7 +189,14 @@ namespace StarterAssets
                 {
                     GameObject.Instantiate(PineObject, hit.point, OakObject.transform.rotation);
                 }
-                inventory.RemoveSelectedSeed();
+                if (plantEffect != null)
+                {
+					GameObject.Instantiate(plantEffect, hit.point, plantEffect.transform.rotation);
+					plantEffect.Play();
+                }
+
+				inventory.RemoveSelectedSeed();
+
             }
         }
 
