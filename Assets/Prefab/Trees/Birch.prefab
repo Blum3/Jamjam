@@ -53,7 +53,7 @@ MonoBehaviour:
   soilModel: {fileID: 5235709416566152239}
   treeModel: {fileID: 5795339508395688507}
   treeBiom: forest
-  growCoef: 1
+  growCoef: 2
   altitude: 0
   maxOptimalAlt: 1000
   minOptimalAlt: -1000
@@ -118,7 +118,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

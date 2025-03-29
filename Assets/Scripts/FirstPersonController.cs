@@ -59,12 +59,12 @@ namespace StarterAssets
         [Header("Inventory")]
         [Tooltip("script handling inventory logic")]
         public Inventory inventory;
-		    public GameObject AshPrefab;
+		public GameObject AshPrefab;
         public GameObject BirchPrefab;
         public GameObject SprucePrefab;
         public GameObject WippingWillowPrefab;
         public UIManager UIManager;
-		    public ParticleSystem plantEffect;
+		public ParticleSystem plantEffect;
 
 
         [Header("Cinemachine")]
@@ -151,7 +151,12 @@ namespace StarterAssets
 
 		public void OnGrab()
 		{
-			Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
+            // si le jeu est paused ne pas prendre en compte l'input
+            if (UIManager.gameIsPaused)
+            {
+                return;
+            }
+            Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
 
 			if (Physics.Raycast(ray, out RaycastHit grabbable_hit, GrabbingReach, GrabbingLayers))
 			{
@@ -164,6 +169,11 @@ namespace StarterAssets
 
         public void OnScroll(InputValue value)
         {
+			// si le jeu est paused ne pas prendre en compte l'input
+			if (UIManager.gameIsPaused)
+			{
+				return;
+			}
 			float scrollValue = value.Get<float>();
 			if (scrollValue > 0)
 			{
@@ -177,9 +187,14 @@ namespace StarterAssets
 
         public void OnShoot()
         {
-			Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
+            // si le jeu est paused ne pas prendre en compte l'input
+            if (UIManager.gameIsPaused)
+            {
+                return;
+            }
+            Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, PlantingReach, PlantingLayers) && inventory.canPlantSeed() && !UIManager.gameIsPaused)
+            if (Physics.Raycast(ray, out RaycastHit hit, PlantingReach, PlantingLayers) && inventory.canPlantSeed())
             {
                 Tree.treeTypes treeType = inventory.GetSelectedSeed();
                 // Generate a random rotation around the Y-axis
@@ -213,8 +228,11 @@ namespace StarterAssets
 
 		public void OnSettings()
 		{
-			UIManager.showOrHideSettings();
+
+            UIManager.showOrHidePauseMenu();
 		}
+
+
 
         private void GroundedCheck()
 		{
@@ -225,8 +243,13 @@ namespace StarterAssets
 
 		private void CameraRotation()
 		{
+			if (UIManager.gameIsPaused)
+			{
+				return;
+			}
+
 			// if there is an input
-			if (_input.look.sqrMagnitude >= _threshold && !UIManager.gameIsPaused)
+			if (_input.look.sqrMagnitude >= _threshold )
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;

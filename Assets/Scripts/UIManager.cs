@@ -1,6 +1,9 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using StarterAssets;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,11 +21,17 @@ public class UIManager : MonoBehaviour
     [Tooltip("The Crosshair to activate when the player can grab")]
     public GameObject GrabCrosshair;
 
-    public GameObject SettingsPanel;
+    public GameObject PauseMenuPanel;
     public GameObject SeedsPanel;
-    public bool gameIsPaused = false;
+    public GameObject ControlsPanel;
+    public Button ResumeButton;
+    public bool gameIsPaused = true;
+
+    public FirstPersonController FirstPersonController;
 
     private Coroutine messageCoroutine; // Store coroutine to stop if needed
+
+
 
     public void ShowTip(string text)
     {
@@ -78,25 +87,27 @@ public class UIManager : MonoBehaviour
         messageText.enabled = false;
     }
 
-    public void showOrHideSettings()
+    public void showOrHidePauseMenu()
     {
         if (gameIsPaused)
         {
             SeedsPanel.SetActive(true);
-            SettingsPanel.SetActive(false);
+            PauseMenuPanel.SetActive(false);
+            ControlsPanel.SetActive(false);
             gameIsPaused = false;
             Time.timeScale = 1f;
         }
         else
         {
             SeedsPanel.SetActive(false);
-            SettingsPanel.SetActive(true);
+            PauseMenuPanel.SetActive(true);
+            ResumeButton.Select();
             gameIsPaused = true;
             Time.timeScale = 0f;
         }
     }
     public void showSettings()
     {
-        SettingsPanel.SetActive(true);
+        PauseMenuPanel.SetActive(true);
     }
 }
