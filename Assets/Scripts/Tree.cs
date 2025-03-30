@@ -82,12 +82,8 @@ public class Tree : MonoBehaviour
                 treeModel.transform.localScale = new Vector3(growSize2* randomSizeFactor, growSize2 * randomSizeFactor, growSize2 * randomSizeFactor);
                 // update the model of the tree
             }
-            // Debug.Log(treeState);
 
         }
-        else
-        {
-            Debug.Log(treeType.ToString() + " is not growing.");
-        }
+
     }
 }

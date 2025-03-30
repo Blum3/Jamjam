@@ -24,10 +24,10 @@ public class Inventory : MonoBehaviour
 
     void Start()
     {
-        seeds[Tree.treeTypes.Ash] = 50;
-        seeds[Tree.treeTypes.Birch] = 50;
-        seeds[Tree.treeTypes.Spruce] = 50;
-        seeds[Tree.treeTypes.WippingWillow] = 50;
+        //seeds[Tree.treeTypes.Ash] = 50;
+        //seeds[Tree.treeTypes.Birch] = 50;
+        //seeds[Tree.treeTypes.Spruce] = 50;
+        //seeds[Tree.treeTypes.WippingWillow] = 50;
 
         UpdateSeedUI();
     }

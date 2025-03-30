@@ -75,9 +75,17 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
+        [Header("Audio")]
+        public AudioManager audioManager;
 
-		// cinemachine
-		private float _cinemachineTargetPitch;
+		//audio
+		private bool _isWalking;
+        private bool _isRunning;
+
+
+
+        // cinemachine
+        private float _cinemachineTargetPitch;
 
 		// player
 		private float _speed;
@@ -140,6 +148,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			PlayMovementSounds();
 		}
 
 		private void LateUpdate()
@@ -148,8 +157,34 @@ namespace StarterAssets
 		}
 
 
+		public void PlayMovementSounds()
+		{
+			if (_speed > 0 && _speed < 5 && !_isWalking && Grounded)
+			{
+				audioManager.Play("Walking");
+                audioManager.Stop("Running");
+                _isWalking = true;
+                _isRunning = false;
+            }
+            else if (_speed > 5 && !_isRunning && Grounded)
+            {
+                audioManager.Stop("Walking");
+                audioManager.Play("Running");
+                _isRunning = true;
+                _isWalking = false;
+            }
+            else if (_speed == 0 || !Grounded)
+			{
+				audioManager.Stop("Walking");
+                audioManager.Stop("Running");
+                _isWalking = false;
+				_isRunning = false;
+			}
+		}
 
-		public void OnGrab()
+
+
+        public void OnGrab()
 		{
             // si le jeu est paused ne pas prendre en compte l'input
             if (UIManager.gameIsPaused)
@@ -228,8 +263,7 @@ namespace StarterAssets
 
 		public void OnSettings()
 		{
-
-            UIManager.showOrHidePauseMenu();
+            UIManager.PausingOrResumingGame();
 		}
 
 
@@ -238,8 +272,9 @@ namespace StarterAssets
 		{
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-		}
+			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Collide);
+        }
+
 
 		private void CameraRotation()
 		{
@@ -394,7 +429,7 @@ namespace StarterAssets
 			if (Grounded) Gizmos.color = transparentGreen;
 			else Gizmos.color = transparentRed;
 
-			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
+			// when selected, draw a gizmo in the position of, and matching radius of, the grounded col	lider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
 	}

@@ -1,6 +1,7 @@
-# Ecorce
 
-Welcome to **Ecorce**! This is a chill and relaxing game where the player can find new seeds and plant them to grow a forest.
+# ![Gameplay Screenshot 2](Assets/Images/evergreenlogo.png)
+
+Welcome to **Evergreen Valley**! This is a chill and relaxing game where the player can find new seeds and plant them to grow a forest.
 
 ## 📷 Screenshots
 
