@@ -14,18 +14,6 @@ Welcome to **Evergreen Valley**! This is a chill and relaxing game where the pla
 3. Follow the installation steps.
 4. Enjoy!
 
-## 🛠 Installation
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/my-awesome-game.git
-
-# Navigate into the project directory
-cd my-awesome-game
-
-# Install dependencies
-npm install  # or pip install -r requirements.txt (depending on your stack)
-```
-
 ## 🤝 The team
 This project was made during a 48h game jam by 2 people:
 
