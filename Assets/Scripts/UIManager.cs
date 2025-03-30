@@ -87,18 +87,22 @@ public class UIManager : MonoBehaviour
         messageText.enabled = false;
     }
 
-    public void showOrHidePauseMenu()
+    public void PausingOrResumingGame()
     {
         if (gameIsPaused)
         {
+            Debug.Log("resuming game");
             SeedsPanel.SetActive(true);
             PauseMenuPanel.SetActive(false);
             ControlsPanel.SetActive(false);
             gameIsPaused = false;
             Time.timeScale = 1f;
+            Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
+            Debug.Log("pausing game");
+            Cursor.lockState = CursorLockMode.Confined;  
             SeedsPanel.SetActive(false);
             PauseMenuPanel.SetActive(true);
             ResumeButton.Select();
@@ -109,5 +113,11 @@ public class UIManager : MonoBehaviour
     public void showSettings()
     {
         PauseMenuPanel.SetActive(true);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+        Debug.Log("Quitting the game");
     }
 }
