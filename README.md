@@ -9,9 +9,10 @@ Welcome to **Evergreen Valley**! This is a chill and relaxing game where the pla
 ![Gameplay Screenshot 2](Assets/Images/screenshot2.png)
 
 ## 🎮 How to Play
-1. Make a build of the game.
+1. [Download the installer](https://drive.google.com/file/d/1_gAi9YXoOziSm1caPqpfe06f4tCLuK61/view?usp=sharing)
 2. Run the executable.
-3. Enjoy!
+3. Follow the installation steps.
+4. Enjoy!
 
 ## 🛠 Installation
 ```bash
